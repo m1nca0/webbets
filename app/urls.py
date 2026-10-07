@@ -20,10 +20,21 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
 from bets import views
-from bets.api import BetsViewset
+from bets.api import SportsViewset
+from bets.api import OutcomeViewset
+from bets.api import BetViewset
+from bets.api import EventViewset
+from bets.api import TeamViewset
+from bets.api import TournametViewset
 
 router = DefaultRouter()
-router.register('bets', BetsViewset, basename='bets')
+router.register('sports', SportsViewset, basename='sports')
+router.register('outcome', OutcomeViewset, basename='outcome')
+router.register('bet', BetViewset, basename='bet')
+router.register('event', EventViewset, basename='event')
+router.register('team', TeamViewset, basename='team')
+router.register('tournamet', TournametViewset, basename='tournamet')
+
 
 urlpatterns = [
     path('', views.ShowSportsView.as_view()),
