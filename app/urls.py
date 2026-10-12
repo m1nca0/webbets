@@ -37,7 +37,7 @@ router.register('tournamet', TournametViewset, basename='tournamet')
 
 
 urlpatterns = [
-    path('', views.ShowSportsView.as_view()),
+    path('sports/', views.ShowSportsView.as_view()),
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
 ]

@@ -9,7 +9,7 @@ from bets.models import Tournamet
 class SportSerializer(serializers.ModelSerializer):
     class Meta:
         model = Sport
-        fields = ['id', 'name']
+        fields = ['id', 'name', 'type']
 
 class OutcomeSerializer(serializers.ModelSerializer):
     class Meta:
@@ -19,12 +19,12 @@ class OutcomeSerializer(serializers.ModelSerializer):
 class BetSerializer(serializers.ModelSerializer):
     class Meta:
         model = Bet
-        fields = ['id', 'coef', 'sum', 'outcome']
+        fields = ['id', 'coef', 'sum', 'outcome', 'user']
 
 class EventSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
-        fields = ['id', 'status', 'score_home', 'score_away', 'tournamet', 'home_team']
+        fields = ['id', 'status', 'score_home', 'score_away', 'tournamet', 'home_team', 'away_team']
 
 class TeamSerializer(serializers.ModelSerializer):
     class Meta:

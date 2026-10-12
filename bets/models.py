@@ -1,8 +1,9 @@
 from django.db import models
+from django.conf import settings
 
 class Outcome(models.Model):
     type = models.TextField()
-    result = models.TextField()
+    result = models.BooleanField()
     status = models.BooleanField()
     event = models.ForeignKey("Event", on_delete=models.CASCADE, null = True)
 
@@ -11,13 +12,17 @@ class Outcome(models.Model):
         verbose_name_plural = "Исходы"
 
     def __str__(self) -> str:
-        return self.name
+        return self.type + " " + str(self.result) + " " + str(self.status) + " " + self.event.tournamet.name
 
 class Bet(models.Model):
     coef = models.FloatField()
     sum = models.FloatField()
-    outcome = models.ForeignKey("Outcome", on_delete=models.CASCADE, null = True)
-    # user = models.ForeignKey("User", on_delete=models.CASCADE, null = True)
+    outcome = models.ForeignKey("Outcome", on_delete=models.CASCADE, null=True)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        null=True,
+    )
 
 class Event(models.Model):
     status = models.BooleanField()
@@ -42,7 +47,7 @@ class Event(models.Model):
         verbose_name_plural = "События"
 
     def __str__(self) -> str:
-        return self.name
+        return self.tournamet.name + " " + self.home_team.name + " vs " + self.away_team.name
 
 class Team(models.Model):
     name = models.TextField()
@@ -56,9 +61,18 @@ class Team(models.Model):
         return self.name
     
 class Sport(models.Model):
+    class Type(models.TextChoices):
+        TEAM = "team", "Командный"
+        INDIVIDUAL = "individual", "Индивидуальный"
+        PAIR = "pair", "Парный"
+
     name = models.TextField()
-    type = models.TextField()
-    
+    type = models.CharField(
+        max_length=20,
+        choices=Type.choices,
+        default=Type.TEAM,
+    )
+
     class Meta:
         verbose_name = "Спорт"
         verbose_name_plural = "Вид спорта"

@@ -4,7 +4,7 @@ from bets.models import Bet, Outcome, Sport, Team, Tournamet, Event
 
 @admin.register(Bet)
 class BetAdmin(admin.ModelAdmin):
-    list_display = ["id", "coef", "sum", "outcome"]
+    list_display = ["id", "coef", "sum", "outcome", "user"]
 
 @admin.register(Outcome)
 class OutcomeAdmin(admin.ModelAdmin):
@@ -16,7 +16,7 @@ class SportAdmin(admin.ModelAdmin):
 
 @admin.register(Event)
 class EventAdmin(admin.ModelAdmin):
-    list_display = ["id", "status", "score_home", "score_away", "tournamet", "home_team"]
+    list_display = ["id", "status", "score_home", "score_away", "tournamet", "home_team", "away_team"]
 
 @admin.register(Team)
 class TeamAdmin(admin.ModelAdmin):
