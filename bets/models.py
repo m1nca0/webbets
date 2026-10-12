@@ -23,9 +23,19 @@ class Event(models.Model):
     status = models.BooleanField()
     score_home = models.IntegerField()
     score_away = models.IntegerField()
-    tournamet = models.ForeignKey("Tournamet", on_delete=models.CASCADE, null = True)
-    home_team = models.ForeignKey("Team", on_delete=models.CASCADE, null=True)
-    # away_team = models.ForeignKey("Team", on_delete=models.CASCADE, null=True)
+    tournamet = models.ForeignKey("Tournamet", on_delete=models.CASCADE, null=True)
+    home_team = models.ForeignKey(
+        "Team",
+        on_delete=models.CASCADE,
+        null=True,
+        related_name="home_events",
+    )
+    away_team = models.ForeignKey(
+        "Team",
+        on_delete=models.CASCADE,
+        null=True,
+        related_name="away_events",
+    )
 
     class Meta:
         verbose_name = "Событие"
