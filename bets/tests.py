@@ -341,3 +341,173 @@ class BetsViewTestCase(TestCase):
         data = r.json()
         assert len(data) == 9
         assert bet_id_to_delete not in [i['id'] for i in data]
+
+    def test_update_sport(self):
+        sports = baker.make("bets.Sport", 10)
+        sport: Sport = sports[2]
+
+        r = self.client.get(f"/api/sports/{sport.id}/")
+        data = r.json()
+        assert data['name'] == sport.name
+
+        r = self.client.put(f"/api/sports/{sport.id}/", {
+            "name": "Updated Sport Name", 
+            "type": sport.type
+        }, content_type="application/json")
+
+        assert r.status_code == 200
+
+        r = self.client.get(f"/api/sports/{sport.id}/")
+        data = r.json()
+        assert data['name'] == "Updated Sport Name"
+
+        sport.refresh_from_db()
+        assert data["name"] == sport.name
+
+    def test_update_team(self):
+        sport = baker.make(Sport)
+        teams = baker.make("bets.Team", sport=sport, _quantity=10)
+        team: Team = teams[2]
+
+        r = self.client.get(f"/api/team/{team.id}/")
+        data = r.json()
+        assert data['name'] == team.name
+
+        r = self.client.put(f"/api/team/{team.id}/", {
+            "name": "Updated Team Name", 
+            "sport": team.sport.id
+        }, content_type="application/json")
+
+        assert r.status_code == 200
+
+        r = self.client.get(f"/api/team/{team.id}/")
+        data = r.json()
+        assert data['name'] == "Updated Team Name"
+
+        team.refresh_from_db()
+        assert data["name"] == team.name
+
+    def test_update_event(self):
+        sport = baker.make(Sport)
+        team1 = baker.make(Team, sport=sport)
+        team2 = baker.make(Team, sport=sport)
+        tournamet = baker.make(Tournamet, sport=sport)
+        event = baker.make(
+            Event,
+            tournamet=tournamet,
+            home_team=team1,
+            away_team=team2,
+        )
+
+        r = self.client.get(f"/api/event/{event.id}/")
+        data = r.json()
+        assert data['status'] == event.status
+
+        r = self.client.put(f"/api/event/{event.id}/", {
+            "status": not event.status, 
+            "score_home": event.score_home,
+            "score_away": event.score_away,
+            "tournamet": event.tournamet.id,
+            "home_team": event.home_team.id,
+            "away_team": event.away_team.id
+        }, content_type="application/json")
+
+        assert r.status_code == 200
+
+        r = self.client.get(f"/api/event/{event.id}/")
+        data = r.json()
+        assert data['status'] == (not event.status)
+
+        event.refresh_from_db()
+        assert data["status"] == event.status
+
+    def test_update_outcome(self):
+        sport = baker.make(Sport)
+        team1 = baker.make(Team, sport=sport)
+        team2 = baker.make(Team, sport=sport)
+        tournamet = baker.make(Tournamet, sport=sport)
+        event = baker.make(
+            Event,
+            tournamet=tournamet,
+            home_team=team1,
+            away_team=team2,
+        )
+        outcome = baker.make(Outcome, event=event)
+
+        r = self.client.get(f"/api/outcome/{outcome.id}/")
+        data = r.json()
+        assert data['type'] == outcome.type
+
+        r = self.client.put(f"/api/outcome/{outcome.id}/", {
+            "type": "Updated Outcome Type", 
+            "result": outcome.result,
+            "status": outcome.status,
+            "event": outcome.event.id
+        }, content_type="application/json")
+
+        assert r.status_code == 200
+
+        r = self.client.get(f"/api/outcome/{outcome.id}/")
+        data = r.json()
+        assert data['type'] == "Updated Outcome Type"
+
+        outcome.refresh_from_db()
+        assert data["type"] == outcome.type
+
+    def test_update_bet(self):
+        sport = baker.make(Sport)
+        team1 = baker.make(Team, sport=sport)
+        team2 = baker.make(Team, sport=sport)
+        tournamet = baker.make(Tournamet, sport=sport)
+        event = baker.make(
+            Event,
+            tournamet=tournamet,
+            home_team=team1,
+            away_team=team2,
+        )
+        outcome = baker.make(Outcome, event=event)
+        user = baker.make(User)
+        bet = baker.make(Bet, outcome=outcome, user=user)
+
+        r = self.client.get(f"/api/bets/{bet.id}/")
+        data = r.json()
+        assert data['coef'] == bet.coef
+
+        r = self.client.put(f"/api/bets/{bet.id}/", {
+            "coef": bet.coef + 1.0, 
+            "sum": bet.sum,
+            "outcome": bet.outcome.id,
+            "user": bet.user.id
+        }, content_type="application/json")
+
+        assert r.status_code == 200
+
+        r = self.client.get(f"/api/bets/{bet.id}/")
+        data = r.json()
+        assert data['coef'] == (bet.coef + 1.0)
+
+        bet.refresh_from_db()
+        assert data["coef"] == bet.coef
+
+    def test_update_tournamet(self):
+        sport = baker.make(Sport)
+        tournamet = baker.make(Tournamet, sport=sport)
+
+        r = self.client.get(f"/api/tournamet/{tournamet.id}/")
+        data = r.json()
+        assert data['name'] == tournamet.name
+
+        r = self.client.put(f"/api/tournamet/{tournamet.id}/", {
+            "name": "Updated Tournamet Name", 
+            "sport": tournamet.sport.id,
+            "country": tournamet.country
+        }, content_type="application/json")
+
+        assert r.status_code == 200
+
+        r = self.client.get(f"/api/tournamet/{tournamet.id}/")
+        data = r.json()
+        assert data['name'] == "Updated Tournamet Name"
+
+        tournamet.refresh_from_db()
+        assert data["name"] == tournamet.name
