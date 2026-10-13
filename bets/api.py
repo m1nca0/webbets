@@ -18,6 +18,7 @@ from bets.serializers import TournametSerializer
 class SportsViewset(
     mixins.CreateModelMixin,
     mixins.UpdateModelMixin,
+    mixins.DestroyModelMixin,
     mixins.RetrieveModelMixin,
     mixins.ListModelMixin,
     GenericViewSet):
@@ -27,6 +28,7 @@ class SportsViewset(
 class OutcomeViewset(
     mixins.CreateModelMixin,
     mixins.UpdateModelMixin,
+    mixins.DestroyModelMixin,
     mixins.RetrieveModelMixin,
     mixins.ListModelMixin,
     GenericViewSet):
@@ -36,6 +38,7 @@ class OutcomeViewset(
 class BetViewset(
     mixins.CreateModelMixin,
     mixins.UpdateModelMixin,
+    mixins.DestroyModelMixin,
     mixins.RetrieveModelMixin,
     mixins.ListModelMixin,
     GenericViewSet):
@@ -45,6 +48,7 @@ class BetViewset(
 class EventViewset(
     mixins.CreateModelMixin,
     mixins.UpdateModelMixin,
+    mixins.DestroyModelMixin,
     mixins.RetrieveModelMixin,
     mixins.ListModelMixin,
     GenericViewSet):
@@ -54,6 +58,7 @@ class EventViewset(
 class TeamViewset(
     mixins.CreateModelMixin,
     mixins.UpdateModelMixin,
+    mixins.DestroyModelMixin,
     mixins.RetrieveModelMixin,
     mixins.ListModelMixin,
     GenericViewSet):
@@ -63,6 +68,7 @@ class TeamViewset(
 class TournametViewset(
     mixins.CreateModelMixin,
     mixins.UpdateModelMixin,
+    mixins.DestroyModelMixin,
     mixins.RetrieveModelMixin,
     mixins.ListModelMixin,
     GenericViewSet):
